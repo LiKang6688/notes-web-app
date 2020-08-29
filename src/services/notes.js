@@ -1,6 +1,12 @@
 import axios from "axios";
 const baseUrl = "http://localhost:3001/api/notes";
 
+let token = null;
+
+const setToken = (newToken) => {
+  token = `bearer ${newToken}`;
+};
+
 const getAll = () => {
   const request = axios.get(baseUrl);
   //   const nonExisting = {
@@ -18,14 +24,28 @@ const getOne = (id) => {
   return request.then((response) => response.data);
 };
 
-const create = (newObject) => {
-  const request = axios.post(baseUrl, newObject);
+const createOne = (newObject) => {
+  const config = {
+    headers: { authorization: token },
+  };
+
+  const request = axios.post(baseUrl, newObject, config);
   return request.then((response) => response.data);
 };
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject);
+const updateOne = (id, newObject) => {
+  const config = {
+    headers: { authorization: token },
+  };
+
+  const request = axios.put(`${baseUrl}/${id}`, newObject, config);
   return request.then((response) => response.data);
 };
 
-export default { getAll, getOne, create, update };
+export default {
+  getAll: getAll,
+  getOne: getOne,
+  createOne: createOne,
+  updateOne: updateOne,
+  setToken: setToken,
+};
